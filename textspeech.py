@@ -1,4 +1,4 @@
-//Task6 Create a menu-driven program using Python for Notepad, Chrome, WhatsApp, 6. Email, SMS, ChatGPT, geolocation, or retrieving current trending topics on Twitter.
+//Task5 Create a menu-driven program using Python for Notepad, Chrome, WhatsApp, 6. Email, SMS, ChatGPT, geolocation, or retrieving current trending topics on Twitter.
 import os
 import webbrowser
 import smtplib
