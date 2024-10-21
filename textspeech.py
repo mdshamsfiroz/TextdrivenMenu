@@ -1,5 +1,11 @@
-//The code defines several functions to perform different actions, such as opening the calendar, Chrome, File Explorer, Notepad, Command Prompt, Control Panel, Task Manager, and System Settings.
+//Task6 Create a menu-driven program using Python for Notepad, Chrome, WhatsApp, 6. Email, SMS, ChatGPT, geolocation, or retrieving current trending topics on Twitter.
 import os
+import webbrowser
+import smtplib
+from email.mime.text import MIMEText
+import openai
+from geopy.geocoders import Nominatim
+import tweepy
 
 print("Hey, I am your assistant.")
 
@@ -35,76 +41,131 @@ def open_system_settings():
     print("Opening System Settings...")
     os.system("start ms-settings:")
 
+def open_whatsapp():
+    print("Opening WhatsApp Web...")
+    webbrowser.open("https://web.whatsapp.com/")
+
+def send_email():
+    sender_email = input("Enter your email: ")
+    sender_password = input("Enter your email password: ")
+    recipient_email = input("Enter recipient email: ")
+    subject = input("Enter email subject: ")
+    body = input("Enter email body: ")
+
+    msg = MIMEText(body)
+    msg['Subject'] = subject
+    msg['From'] = sender_email
+    msg['To'] = recipient_email
+
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
+            smtp_server.login(sender_email, sender_password)
+            smtp_server.sendmail(sender_email, recipient_email, msg.as_string())
+        print("Email sent successfully!")
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+
+def send_sms():
+    print("SMS functionality requires additional setup with a service provider.")
+    print("For demonstration, we'll just print the message.")
+    recipient = input("Enter recipient phone number: ")
+    message = input("Enter SMS message: ")
+    print(f"SMS sent to {recipient}: {message}")
+
+def chat_with_gpt():
+    openai.api_key = input("Enter your OpenAI API key: ")
+    user_input = input("Enter your message to ChatGPT: ")
+    try:
+        response = openai.Completion.create(
+            engine="text-davinci-002",
+            prompt=user_input,
+            max_tokens=150
+        )
+        print("ChatGPT response:", response.choices[0].text.strip())
+    except Exception as e:
+        print(f"Error communicating with ChatGPT: {e}")
+
+def get_geolocation():
+    geolocator = Nominatim(user_agent="myGeocoder")
+    location = input("Enter a location to geocode: ")
+    try:
+        location = geolocator.geocode(location)
+        print(f"Address: {location.address}")
+        print(f"Latitude: {location.latitude}, Longitude: {location.longitude}")
+    except Exception as e:
+        print(f"Error getting geolocation: {e}")
+
+def get_twitter_trends():
+    print("To use this feature, you need to set up Twitter API credentials.")
+    consumer_key = input("Enter your Twitter API consumer key: ")
+    consumer_secret = input("Enter your Twitter API consumer secret: ")
+    access_token = input("Enter your Twitter access token: ")
+    access_token_secret = input("Enter your Twitter access token secret: ")
+
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
+    api = tweepy.API(auth)
+
+    try:
+        trends = api.get_place_trends(1)  # 1 is the woeid for worldwide
+        print("Current Twitter Trends:")
+        for trend in trends[0]["trends"][:10]:
+            print(trend["name"])
+    except Exception as e:
+        print(f"Error fetching Twitter trends: {e}")
 
 def assistance():
-    ch = input("How can I help you: ").strip()
-    return ch
-
+    print("\nWhat would you like to do?")
+    print("1. Open Calendar")
+    print("2. Open Chrome")
+    print("3. Open File Explorer")
+    print("4. Open Notepad")
+    print("5. Open Command Prompt")
+    print("6. Open Control Panel")
+    print("7. Open Task Manager")
+    print("8. Open System Settings")
+    print("9. Open WhatsApp")
+    print("10. Send Email")
+    print("11. Send SMS")
+    print("12. Chat with GPT")
+    print("13. Get Geolocation")
+    print("14. Get Twitter Trends")
+    print("15. Exit")
+    return input("Enter your choice (1-15): ")
 
 while True:
-    ch = assistance()
+    choice = assistance()
 
-    if ("run" in ch or "execute" in ch) and "cal" in ch:
+    if choice == '1':
         open_calendar()
-    elif ("run" in ch or "open" in ch or "execute" in ch) and "chrome" in ch:
-        if "don't" not in ch and "not" not in ch and "do not" not in ch:
-            open_chrome()
-        else:
-            print("Okay, I won't open Chrome.")
-    
-    elif ("run" in ch or "execute" in ch) and "file explorer" in ch:
+    elif choice == '2':
+        open_chrome()
+    elif choice == '3':
         open_file_explorer()
-    elif ("run" in ch or "open" in ch) and "file explorer" in ch:
-        if "don't" not in ch and "not" not in ch and "do not" not in ch:
-            open_file_explorer()
-        else:
-            print("Okay, I won't open explorer.")
-    
-    elif ("run" in ch or "execute" in ch) and "notepad" in ch:
+    elif choice == '4':
         open_notepad()
-    elif ("run" in ch or "open" in ch) and "notepad" in ch:
-        if "don't" not in ch and "not" not in ch and "do not" not in ch:
-            open_notepad()
-        else:
-            print("Okay, I won't open notepad.")
-            
-    
-    elif ("run" in ch or "execute" in ch) and ("cmd" in ch or "command prompt" in ch) :
+    elif choice == '5':
         open_command_prompt()
-    elif ("run" in ch or "open" in ch) and "cmd" in ch:
-        if "don't" not in ch and "not" not in ch and "do not" not in ch:
-            open_command_prompt()
-        else:
-            print("Okay, I won't open command prompt.")
-    
-    elif ("run" in ch or "execute" in ch) and "control panel" in ch :
+    elif choice == '6':
         open_control_panel()
-    elif ("run" in ch or "open" in ch) and "control panel" in ch:
-        if "don't" not in ch and "not" not in ch and "do not" not in ch:
-            open_control_panel()
-        else:
-            print("Okay, I won't open controlpanel.")
-            
-    elif ("run" in ch or "execute" in ch) and "task manager" in ch :
+    elif choice == '7':
         open_task_manager()
-    elif ("run" in ch or "open" in ch) and "task manager" in ch:
-        if "don't" not in ch and "not" not in ch and "do not" not in ch:
-            open_task_manager()
-        else:
-            print("Okay, I won't open task manager.")
-    
-    
-    elif ("run" in ch or "execute" in ch) and "setting" in ch :
+    elif choice == '8':
         open_system_settings()
-    elif ("run" in ch or "open" in ch) and "setting" in ch:
-        if "don't" not in ch and "not" not in ch and "do not" not in ch:
-            open_system_settings()
-        else:
-            print("Okay, I won't open  system setting.")
-    
-            
-    elif ch:
-        print("Please type valid text....")
-    else:
+    elif choice == '9':
+        open_whatsapp()
+    elif choice == '10':
+        send_email()
+    elif choice == '11':
+        send_sms()
+    elif choice == '12':
+        chat_with_gpt()
+    elif choice == '13':
+        get_geolocation()
+    elif choice == '14':
+        get_twitter_trends()
+    elif choice == '15':
         print("Thank you, bye.")
         break
+    else:
+        print("Invalid choice. Please try again.")
